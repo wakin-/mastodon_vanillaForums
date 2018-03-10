@@ -98,7 +98,11 @@ class MastodonPlugin extends Gdn_Plugin {
             Gdn::session()->setCookie('Domain', $domain, 60*5);
             $this->_Domain = $domain;
         } else if ($this->_Domain == null) {
-            $this->_Domain = Gdn::session()->getCookie('Domain', null);
+            if (Gdn::session()->User) {
+                $this->_Domain = valr(self::PROVIDER_KEY.'.Profile.domain', Gdn::session()->User->Attributes);
+            } else {
+                $this->_Domain = Gdn::session()->getCookie('Domain', null);
+            }
         }
 
         if ($this->_Domain == null) {
@@ -243,7 +247,6 @@ class MastodonPlugin extends Gdn_Plugin {
      * @throws Gdn_UserException
      */
     public static function curl($url, $method = 'GET', $data = [], $accessToken=false) {
-#        $accessToken = $this->accessToken();
         $ch = curl_init();
         if ($accessToken) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -306,7 +309,6 @@ class MastodonPlugin extends Gdn_Plugin {
      */
     public function signInButton($type = 'button') {
         $target = Gdn::request()->post('Target', Gdn::request()->get('Target', url('', '/')));
-#        $url = $this->authorizeUri(['target' => $target]);
         $url = '/entry/mastodon';
 
         if ($target) {
@@ -352,23 +354,6 @@ class MastodonPlugin extends Gdn_Plugin {
     }
 
     /**
-     * Add 'Mastodon' option to the row.
-     *
-     * @param Gdn_Controller $sender
-     * @param array $args
-     */
-    public function base_afterReactions_handler($sender, $args) {
-        if (!$this->socialReactions()) {
-            return;
-        }
-        echo Gdn_Theme::bulletItem('Share');
-        $url = url("post/mastodon/{$args['RecordType']}?id={$args['RecordID']}", true);
-        $cssClass = 'ReactButton PopupWindow';
-
-        echo ' '.anchor(sprite('ReactMastodon', 'ReactSprite', t('Share on Mastodon')), $url, $cssClass).' ';
-    }
-
-    /**
      * Generic SSO hook into Vanilla for authorizing via Mastodon and pass user info.
      *
      * @param EntryController $sender
@@ -386,24 +371,17 @@ class MastodonPlugin extends Gdn_Plugin {
 
         // This isn't a trusted connection. Don't allow it to automatically connect a user account.
         saveToConfig('Garden.Registration.AutoConnect', true, false);
-        #saveToConfig('Garden.Registration.AutoConnect', false, false);
 
         $form = $sender->Form;
         $form->setFormValue('UniqueID', val('full_acct', $profile));
         $form->setFormValue('Provider', self::PROVIDER_KEY);
         $form->setFormValue('ProviderName', 'Mastodon');
         $form->setFormValue('FullName', val('full_acct', $profile));
-        #$form->setFormValue('Email', val('email', $profile));
         if (c('Plugins.Mastodon.UseAvatars', true)) {
             $form->setFormValue('Photo', val('avatar', $profile));
         }
 
         #$form->setFormValue('Name', val('username', $profile));
-//        saveToConfig([
-//            'Garden.User.ValidationRegex' => UserModel::USERNAME_REGEX_MIN,
-//            'Garden.User.ValidationLength' => '{3,50}',
-//            'Garden.Registration.NameUnique' => false
-//        ], '', false);
 
         // Save some original data in the attributes of the connection for later API calls.
         $attributes = [];
@@ -425,7 +403,7 @@ class MastodonPlugin extends Gdn_Plugin {
      * @param array $args
      */
     public function base_signInIcons_handler($sender, $args) {
-        if (!$this->isDefault()) {
+        if ($this->isDefault()) {
             echo ' '.$this->signInButton('icon').' ';
         }
     }
@@ -440,7 +418,7 @@ class MastodonPlugin extends Gdn_Plugin {
         if (!$this->isConfigured()) {
             return;
         }
-        if (!$this->isDefault()) {
+        if ($this->isDefault()) {
             echo ' '.$this->signInButton('icon').' ';
         }
     }
@@ -459,7 +437,6 @@ class MastodonPlugin extends Gdn_Plugin {
             'Icon' => $this->getWebResource('icon.png'),
             'Name' => 'Mastodon',
             'ProviderKey' => self::PROVIDER_KEY,
-            #'ConnectUrl' => $this->authorizeUri(['r' => 'profile', 'uid' => Gdn::session()->UserID]),
             'ConnectUrl' => '/entry/mastodon?target=profile&domain-entry=1',
             'Profile' => [
                 'Name' => val('full_acct', $profile),
@@ -539,7 +516,6 @@ class MastodonPlugin extends Gdn_Plugin {
         }
 
         if (isset($sender->Data['Methods'])) {
-            #$url = $this->authorizeUri();
             $url = '/entry/mastodon';
 
             // Add the Mastodon method to the controller.
@@ -633,14 +609,8 @@ class MastodonPlugin extends Gdn_Plugin {
     public function postController_mastodon_create($sender, $recordType, $iD) {
         $row = getRecord($recordType, $iD);
         if ($row) {
-            $message = sliceParagraph(Gdn_Format::plainText($row['Body'], $row['Format']), 160);
+            $url = 'https://'.$this->domain().'/share?'.http_build_query(['text' => $row['Name'].' '.$row['ShareUrl']]);
 
-            #$get = [
-            #    'url' => $row['ShareUrl']
-            #];
-
-            $url = 'https://'+$this->domain()+'/share?text='.http_build_query($row['ShareUrl']);
-            #$url = 'https://'+$this->domain()+'/share?text='.http_build_query($get);
             redirectTo($url, 302, false);
         }
 
@@ -659,8 +629,6 @@ class MastodonPlugin extends Gdn_Plugin {
         $conf = new ConfigurationModule($sender);
         $conf->initialize([
             'Plugins.Mastodon.AppName' => ['LabelCode' => 'App Name', 'Default' => 'vanilla_forums_sso'],
-            'Plugins.Mastodon.SocialReactions' => ['Control' => 'checkbox', 'Default' => true],
-            'Plugins.Mastodon.SocialSharing' => ['Control' => 'checkbox', 'Default' => true],
             'Plugins.Mastodon.UseAvatars' => ['Control' => 'checkbox', 'Default' => true],
             'Plugins.Mastodon.Default' => ['Control' => 'checkbox', 'LabelCode' => 'Make this connection your default signin method.']
         ]);
