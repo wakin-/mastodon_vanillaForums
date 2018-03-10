@@ -1,0 +1,22 @@
+{
+    "name": "Mastodon SSO",
+    "className": "MastodonPlugin",
+    "description": "Connect to an authentication provider to allow users to log on using Mastodon SSO.",
+    "version": "0.1.0",
+    "settingsUrl": "/dashboard/social/mastodon",
+    "settingsPermission": "Garden.Settings.Manage",
+    "mobileFriendly": true,
+    "icon": "icon.png",
+    "key": "mastodon",
+    "type": "addon",
+    "authors": [
+        {
+            "name": "wakin",
+            "email": "8th.mail@gmail.com",
+            "homepage": "http://biwakodon.com/@wakin"
+        }
+    ],
+    "require": {
+        "vanilla": ">=2.2"
+    }
+}
