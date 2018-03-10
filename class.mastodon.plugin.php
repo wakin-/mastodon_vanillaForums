@@ -277,7 +277,8 @@ class MastodonPlugin extends Gdn_Plugin {
         if ($httpCode != 200) {
             $error = val('error', $result, $response);
 
-            throw new Gdn_UserException($error, $httpCode);
+            throw new Gdn_UserException("invalid domain.");
+            #throw new Gdn_UserException($error, $httpCode);
         }
 
         return $result;
@@ -496,7 +497,7 @@ class MastodonPlugin extends Gdn_Plugin {
         }
 
         if (val('domain', $_GET) && val('Auth', $_GET) == 'Auth') {
-            $this->domain(val('domain', $_GET));
+            $this->domain( urlencode(val('domain', $_GET)) );
             if($this->appInfo()) {
                 $this->authorize();
             } else {
