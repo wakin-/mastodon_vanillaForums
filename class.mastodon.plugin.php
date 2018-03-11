@@ -1,6 +1,8 @@
 <?php
 /**
  * Mastodon Plugin.
+ * @copyright wakin
+ * @license http://www.opensource.org/licenses/gpl-2.0.php GNU GPL v2
  */
 
 /**
