@@ -10,7 +10,7 @@
     "hidden": false,
     "socialConnect": true,
     "requiresRegistration": true,
-    "icon": "icon.png",
+    "icon": "mastodon_social_connect.png",
     "key": "mastodon",
     "type": "addon",
     "authors": [
