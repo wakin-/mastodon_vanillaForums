@@ -1,18 +1,14 @@
 {
+    "key": "mastodon",
     "name": "Mastodon Social Connect",
-    "className": "MastodonPlugin",
     "description": "Users may sign into your site using their Mastodon account.",
     "version": "1.0.0",
+    "type": "addon",
+    "license": "GPL2",
+    "icon": "mastodon_social_connect.png",
     "mobileFriendly": true,
     "settingsUrl": "/dashboard/social/mastodon",
     "settingsPermission": "Garden.Settings.Manage",
-    "hasLocale": true,
-    "hidden": false,
-    "socialConnect": true,
-    "requiresRegistration": true,
-    "icon": "mastodon_social_connect.png",
-    "key": "mastodon",
-    "type": "addon",
     "authors": [
         {
             "name": "wakin",
@@ -22,5 +18,5 @@
     ],
     "require": {
         "vanilla": ">=2.2"
-    }
+    },
 }
