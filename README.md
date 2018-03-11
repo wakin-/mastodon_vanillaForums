@@ -1,1 +1,3 @@
-シェアボタン未実装
+[Mastodon](https://joinmastodon.org/)
+
+[Vanilla Forums](http://vanillaforums.com)
