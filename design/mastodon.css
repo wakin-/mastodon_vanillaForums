@@ -12,4 +12,5 @@
 .ReactMastodon {
     background-image: url("/plugins/Mastodon/icon.png");
     background-size: 16px 16px;
+    background-position: 0;
 }
