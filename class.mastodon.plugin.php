@@ -100,7 +100,9 @@ class MastodonPlugin extends Gdn_Plugin {
         } else if ($this->_Domain == null) {
             if (Gdn::session()->User) {
                 $this->_Domain = valr(self::PROVIDER_KEY.'.Profile.domain', Gdn::session()->User->Attributes);
-            } else {
+            }
+
+            if ($this->_Domain == null) {
                 $this->_Domain = Gdn::session()->getCookie('Domain', null);
             }
         }
@@ -470,10 +472,11 @@ class MastodonPlugin extends Gdn_Plugin {
         if (val('domain-entry', $_GET) == 1) {
             $sender->setData('Title', t('Sign In with Mastodon'));
             $sender->render('Domain', '', 'plugins/Mastodon');
+
             exit();
         }
 
-        if (val('domain', $_GET) && val('Auth', $_GET) == 'Auth') {
+        if (val('domain', $_GET)) {
             $this->domain( urlencode(val('domain', $_GET)) );
             if($this->appInfo()) {
                 $this->authorize();
