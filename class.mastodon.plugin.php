@@ -215,15 +215,6 @@ class MastodonPlugin extends Gdn_Plugin {
     }
 
     /**
-     *
-     *
-     * @return bool
-     */
-    public function isDefault() {
-        return (bool)c('Plugins.Mastodon.Default');
-    }
-
-    /**
      * Whether social sharing is enabled.
      *
      * @return bool
@@ -407,9 +398,10 @@ class MastodonPlugin extends Gdn_Plugin {
      * @param array $args
      */
     public function base_signInIcons_handler($sender, $args) {
-        if ($this->isDefault()) {
-            echo ' '.$this->signInButton('icon').' ';
+        if (!$this->isConfigured()) {
+            return;
         }
+        echo 'test '.$this->signInButton('icon').' ';
     }
 
     /**
@@ -422,9 +414,7 @@ class MastodonPlugin extends Gdn_Plugin {
         if (!$this->isConfigured()) {
             return;
         }
-        if ($this->isDefault()) {
-            echo ' '.$this->signInButton('icon').' ';
-        }
+        echo ' '.$this->signInButton('icon').' ';
     }
 
     /**
@@ -534,21 +524,6 @@ class MastodonPlugin extends Gdn_Plugin {
     }
 
     /**
-     * Override the sign in if Mastodon is the default signin method.
-     *
-     * @param EntryController $sender
-     * @param array $args
-     */
-    public function entryController_overrideSignIn_handler($sender, $args) {
-        if (valr('DefaultProvider.AuthenticationKey', $args) !== self::PROVIDER_KEY || !$this->isConfigured()) {
-            return;
-        }
-
-        $url = $this->authorizeUri(['target' => $args['Target']]);
-        $args['DefaultProvider']['SignInUrl'] = $url;
-    }
-
-    /**
      * Endpoint to connect to Mastodon via user profile.
      *
      * @param ProfileController $sender
@@ -635,7 +610,6 @@ class MastodonPlugin extends Gdn_Plugin {
         $conf->initialize([
             'Plugins.Mastodon.AppName' => ['LabelCode' => 'App Name', 'Default' => 'vanilla_forums_sso'],
             'Plugins.Mastodon.UseAvatars' => ['Control' => 'checkbox', 'Default' => true],
-            'Plugins.Mastodon.Default' => ['Control' => 'checkbox', 'LabelCode' => 'Make this connection your default signin method.']
         ]);
 
         if (Gdn::request()->isAuthenticatedPostBack()) {
