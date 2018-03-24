@@ -365,7 +365,7 @@ class MastodonPlugin extends Gdn_Plugin {
         $profile = val('Profile', $mastodon);
 
         // This isn't a trusted connection. Don't allow it to automatically connect a user account.
-        saveToConfig('Garden.Registration.AutoConnect', true, false);
+        saveToConfig('Garden.Registration.AutoConnect', false, false);
 
         $form = $sender->Form;
         $form->setFormValue('UniqueID', val('full_acct', $profile));
