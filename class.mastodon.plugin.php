@@ -8,10 +8,9 @@
 $PluginInfo['Mastodon'] = array(
     'Name' => 'Mastodon Social Connect',
     'Description' => 'Users may sign into your site using their Mastodon account.',
-    'Version' => '1.0.0',
+    'Version' => '1.0.1',
     'RequiredApplications' => array('Vanilla' => '2.2'),
     'MobileFriendly' => true,
-    "Icon" => "mastodon_social_connect.png",
     'License' => 'GPL2',
     'SettingsUrl' => '/dashboard/social/mastodon',
     'SettingsPermission' => 'Garden.Settings.Manage',

@@ -2,7 +2,7 @@
     "key": "mastodon",
     "name": "Mastodon Social Connect",
     "description": "Users may sign into your site using their Mastodon account.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "addon",
     "license": "GPL2",
     "icon": "mastodon_social_connect.png",
