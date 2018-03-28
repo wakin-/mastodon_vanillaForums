@@ -11,6 +11,7 @@ $PluginInfo['Mastodon'] = array(
     'Version' => '1.0.1',
     'RequiredApplications' => array('Vanilla' => '2.2'),
     'MobileFriendly' => true,
+    'Icon' => 'mastodon_social_connect.png',
     'License' => 'GPL2',
     'SettingsUrl' => '/dashboard/social/mastodon',
     'SettingsPermission' => 'Garden.Settings.Manage',
