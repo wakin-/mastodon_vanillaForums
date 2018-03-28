@@ -5,6 +5,20 @@
  * @license http://www.opensource.org/licenses/gpl-2.0.php GNU GPL v2
  */
 
+$PluginInfo['Mastodon'] = array(
+    'Name' => 'Mastodon Social Connect',
+    'Description' => 'Users may sign into your site using their Mastodon account.',
+    'Version' => '1.0.0',
+    'RequiredApplications' => array('Vanilla' => '2.2'),
+    'MobileFriendly' => true,
+    "Icon" => "mastodon_social_connect.png",
+    'License' => 'GPL2',
+    'SettingsUrl' => '/dashboard/social/mastodon',
+    'SettingsPermission' => 'Garden.Settings.Manage',
+    'Author' => "wakin",
+    'AuthorUrl' => 'https://biwakodon.com/@wakin'
+);
+
 /**
  * Class MastodonPlugin
  */
